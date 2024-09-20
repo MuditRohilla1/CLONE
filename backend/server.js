@@ -17,7 +17,7 @@ clodinary.config({
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(express.json()); //to parse request.body
+app.use(express.json({limit: "5mb"})); //to parse request.body
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
