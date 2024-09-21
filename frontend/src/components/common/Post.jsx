@@ -99,9 +99,9 @@ const Post = ({ post }) => {
       }
     },
     onSuccess: () => {
-      toast.success("Comment posted successfully");
-      setComment("");
       queryClient.invalidateQueries({ queryKey: ["posts"] });
+      setComment("");
+      toast.success("Comment posted successfully");
     },
     onError: (error) => {
       toast.error(error.message);
