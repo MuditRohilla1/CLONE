@@ -10,29 +10,36 @@ const RightPanel = () => {
   const { data: suggestedUsers, isLoading } = useQuery({
     queryKey: ["suggestedUsers"],
     queryFn: async () => {
-      try {
-        const res = await fetch("/api/users/suggested");
-        const data = await res.json();
-        if (!res.ok) {
-          throw new Error(data.error || "Something went wrong!");
-        }
-        return data;
-      } catch (error) {
-        throw new Error(error.message);
+      const res = await fetch("/api/users/suggested");
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Something went wrong!");
       }
+      return data;
     },
   });
 
   const { follow, isPending } = useFollow();
 
-  if (suggestedUsers?.length === 0) return <div className="md:w-64 w-0"></div>;
+  if (!suggestedUsers || suggestedUsers.length === 0) {
+    return <div className="md:w-64 w-0"></div>;
+  }
 
   return (
     <div className="hidden lg:block my-4 mx-2">
-      <div className="bg-[#16181C] p-4 rounded-md sticky top-2">
+      <div
+        className="bg-[#16181C] p-4  rounded-md sticky top-2"
+        style={{
+          background: "rgba(0, 0, 0, 0.45)",
+          boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
+          backdropFilter: "blur(3.5px)",
+          WebkitBackdropFilter: "blur(3.5px)",
+          borderRadius: "10px",
+          border: "1px solid rgba(255, 255, 255, 0.18)",
+        }}
+      >
         <p className="font-bold">Who to follow</p>
         <div className="flex flex-col gap-4">
-          {/* item */}
           {isLoading && (
             <>
               <RightPanelSkeleton />
@@ -51,7 +58,10 @@ const RightPanel = () => {
                 <div className="flex gap-2 items-center">
                   <div className="avatar">
                     <div className="w-8 rounded-full">
-                      <img src={user.profileImg || "/avatar-placeholder.png"} />
+                      <img
+                        src={user.profileImg || "/avatar-placeholder.png"}
+                        alt={`${user.username}'s avatar`}
+                      />
                     </div>
                   </div>
                   <div className="flex flex-col">
@@ -81,4 +91,5 @@ const RightPanel = () => {
     </div>
   );
 };
+
 export default RightPanel;
